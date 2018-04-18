@@ -5,14 +5,15 @@ package com.uncc.mobileappdev.inclass12;
  */
 
 public class User {
-    private String firstName, lastName, uid;
+    private String firstName, lastName, uid, email;
 
     public User() {}
 
-    public User(String firstName, String lastName, String uid) {
+    public User(String firstName, String lastName, String uid, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.uid = uid;
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -37,5 +38,13 @@ public class User {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

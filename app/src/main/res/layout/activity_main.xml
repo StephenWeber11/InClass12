@@ -22,7 +22,7 @@
         android:id="@+id/loginpassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/signupbutton"
+        android:layout_alignEnd="@+id/signupButton"
         android:layout_alignStart="@+id/loginbutton"
         android:layout_below="@+id/loginemail"
         android:layout_marginTop="15dp"
@@ -41,7 +41,7 @@
         android:text="@string/login_text" />
 
     <Button
-        android:id="@+id/signupbutton"
+        android:id="@+id/signupButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/loginbutton"

@@ -19,23 +19,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private static FirebaseAuth mAuth;
+    private static DatabaseReference mDatabase;
 
     private EditText userNameField;
     private EditText passwordField;
     private Button login;
     private Button signup;
 
-    private ArrayList<Message> messages;
+    private ArrayList<User> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +42,11 @@ public class MainActivity extends AppCompatActivity {
         userNameField = findViewById(R.id.loginemail);
         passwordField = findViewById(R.id.loginpassword);
         login = findViewById(R.id.loginbutton);
-        signup = findViewById(R.id.signupbutton);
+        signup = findViewById(R.id.signupButton);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        getUserData();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,20 +54,20 @@ public class MainActivity extends AppCompatActivity {
                 String email = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
                 login(email, password);
+            }
+        });
 
-                Intent intent = new Intent(MainActivity.this, MessageThreads.class);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
     private void login(String email, String password) {
+        final String emailAddr = email;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -76,7 +75,11 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("AUTH", "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            Intent intent = new Intent(MainActivity.this, MessageThreads.class);
+                            intent.putExtra(Constants.INTENT_KEY, getUserFirstName(emailAddr));
+                            startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("AUTH", "signInWithEmail:failure", task.getException());
@@ -87,43 +90,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void signup(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password).
-                addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            Log.d("AUTH", "createUserWithEmail:SUCCESS");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                        } else {
-                            Log.d("AUTH", "createUserWithEmail:FAILURE", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-    }
-
-    private void pushUserData(String firstName, String lastName, String uid) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("users").push().setValue(new User(firstName, lastName, uid));
-    }
-
-    private void pushMessageData() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("messages").push().setValue(new Message(null, 0, null));
-    }
-
-    private void getMessageData() {
-        messages = null;
-        mDatabase.child("messages").addValueEventListener(new ValueEventListener() {
+    private void getUserData() {
+        users = null;
+        mDatabase.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                messages = new ArrayList<>();
+                users = new ArrayList<>();
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Message value = postSnapshot.getValue(Message.class);
-                    messages.add(value);
+                    User user = postSnapshot.getValue(User.class);
+                    users.add(user);
                 }
             }
 
@@ -134,7 +109,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private boolean doPasswordsMatch(String passOne, String passTwo) {
-        return passOne.equals(passTwo);
+    public static FirebaseAuth getmAuth() {
+        return mAuth;
     }
+
+    private String getUserFirstName(String email) {
+        String firstName = "";
+        for(User user : users) {
+            if(email.equals(user.getEmail())) {
+                firstName = user.getFirstName();
+            }
+        }
+
+        return firstName;
+    }
+
 }
