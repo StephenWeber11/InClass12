@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 login(email, password);
 
                 Intent intent = new Intent(MainActivity.this, MessageThreads.class);
+                startActivity(intent);
             }
         });
     }
