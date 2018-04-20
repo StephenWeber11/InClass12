@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 /**
  * Created by Stephen on 4/17/2018.
  */
@@ -67,8 +69,10 @@ public class SignUpActivity extends AppCompatActivity {
                     pushUserData(firstName, lastName, uid, email);
 
                     Intent intent = new Intent(SignUpActivity.this, MessageThreads.class);
-                    intent.putExtra(Constants.INTENT_KEY, firstName);
-                    startActivity(intent);
+                    ArrayList<String> userInfo = new ArrayList<>();
+                    userInfo.add(firstName);
+                    userInfo.add(uid);
+                    intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
                 } else {
                     Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 }

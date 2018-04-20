@@ -5,32 +5,16 @@ package com.uncc.mobileappdev.inclass12;
  */
 
 public class Message {
-    String text;
-    int priority;
-    String uid;
+    private String uid;
+    private String messageContent;
+    private String date;
 
-    public Message() {}
+    public Message(){}
 
-    public Message(String text, int priority, String uid) {
-        this.text = text;
-        this.priority = priority;
+    public Message(String uid, String messageContent, String date) {
         this.uid = uid;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
+        this.messageContent = messageContent;
+        this.date = date;
     }
 
     public String getUid() {
@@ -39,5 +23,21 @@ public class Message {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getMessageContent() {
+        return messageContent;
+    }
+
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -17,29 +17,38 @@ public class ThreadsAdapter extends RecyclerView.Adapter{
     ArrayList<Thread> threads;
     Activity activity;
     Thread thread;
+    private static RecyclerViewClickListener recyclerViewClickListener;
 
-    public ThreadsAdapter(ArrayList<Thread> threads, Activity activity)
+    public ThreadsAdapter(ArrayList<Thread> threads, Activity activity, RecyclerViewClickListener recyclerViewClickListener)
     {
         this.threads = threads;
         this.activity = activity;
+        this.recyclerViewClickListener = recyclerViewClickListener;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.listview_thread_message, parent, false);
-        return new ThreadHolder(v);
+        return new ThreadHolder(v, recyclerViewClickListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ThreadHolder threadHolder = (ThreadHolder) holder;
-        thread = threads.get(position);
-        threadHolder.threadName.setText(thread.getThreadName());
+        if(threads != null) {
+            ThreadHolder threadHolder = (ThreadHolder) holder;
+            thread = threads.get(position);
+            threadHolder.threadName.setText(thread.getThreadName());
+        }
 
     }
 
+
+
     @Override
     public int getItemCount() {
-        return threads.size();
+        if(threads != null ) {
+            return threads.size();
+        }
+        return 0;
     }
 }

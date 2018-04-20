@@ -9,15 +9,24 @@ import android.widget.TextView;
  * Created by Stephen on 4/16/2018.
  */
 
-public class ThreadHolder extends RecyclerView.ViewHolder {
+public class ThreadHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     TextView threadName;
     ImageButton removeThread;
+    private RecyclerViewClickListener recyclerViewClickListener;
 
-    public ThreadHolder(View itemView) {
+    public ThreadHolder(View itemView, RecyclerViewClickListener recyclerViewClickListener) {
         super(itemView);
 
         threadName = (TextView) itemView.findViewById(R.id.MessageThread);
         removeThread = (ImageButton) itemView.findViewById(R.id.imageButtonDelete);
+        this.recyclerViewClickListener = recyclerViewClickListener;
+        itemView.setOnClickListener(this);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        recyclerViewClickListener.recyclerViewListClicked(v, this.getPosition());
     }
 }

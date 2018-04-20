@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     private static FirebaseAuth mAuth;
     private static DatabaseReference mDatabase;
+    private ValueEventListener listener;
 
     private EditText userNameField;
     private EditText passwordField;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        createListener();
         getUserData();
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +79,13 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("AUTH", "signInWithEmail:success");
 
                             Intent intent = new Intent(MainActivity.this, MessageThreads.class);
-                            intent.putExtra(Constants.INTENT_KEY, getUserFirstName(emailAddr));
+                            ArrayList<String> userInfo = new ArrayList<>();
+                            userInfo.add(getUserFirstName(emailAddr));
+                            userInfo.add(getUserID(emailAddr));
+                            intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
+
+                            mDatabase.removeEventListener(listener);
+
                             startActivity(intent);
 
                         } else {
@@ -90,9 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void getUserData() {
-        users = null;
-        mDatabase.child("users").addValueEventListener(new ValueEventListener() {
+    protected void createListener() {
+        listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 users = new ArrayList<>();
@@ -106,8 +113,15 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError error) {
                 Log.w("DB", "Failed to read value.", error.toException());
             }
-        });
+        };
     }
+
+
+    private void getUserData() {
+        users = null;
+        mDatabase.child("users").addValueEventListener(listener);
+    }
+
 
     public static FirebaseAuth getmAuth() {
         return mAuth;
@@ -122,6 +136,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return firstName;
+    }
+
+    private String getUserID(String email) {
+        String uid = "";
+        for(User user : users) {
+            if(email.equals(user.getEmail())) {
+                uid = user.getUid();
+            }
+        }
+
+        return uid;
     }
 
 }
