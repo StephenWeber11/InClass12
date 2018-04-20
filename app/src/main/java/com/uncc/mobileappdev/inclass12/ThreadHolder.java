@@ -21,12 +21,17 @@ public class ThreadHolder extends RecyclerView.ViewHolder implements View.OnClic
         threadName = (TextView) itemView.findViewById(R.id.MessageThread);
         removeThread = (ImageButton) itemView.findViewById(R.id.imageButtonDelete);
         this.recyclerViewClickListener = recyclerViewClickListener;
+        removeThread.setOnClickListener(this);
         itemView.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
-        recyclerViewClickListener.recyclerViewListClicked(v, this.getPosition());
+        if(v.equals(removeThread)) {
+            recyclerViewClickListener.removeItem(v, this.getPosition());
+        } else if (recyclerViewClickListener != null) {
+            recyclerViewClickListener.recyclerViewListClicked(v, this.getPosition());
+        }
     }
 }

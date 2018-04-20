@@ -91,10 +91,11 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
                 messages.add(new Message(uid, "Some Message", "TodaysDate"));
                 thread.setMessages(messages);
 
+                threads.add(thread);
+                adapter.notifyDataSetChanged();
                 pushThreadData(thread);
             }
         });
-
 
     }
 
@@ -132,7 +133,7 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
                     threads.add(thread);
 
                     if(adapter == null) {
-                        adapter = new ThreadsAdapter(threads, MessageThreads.this, MessageThreads.this);
+                        adapter = new ThreadsAdapter(threads, MessageThreads.this, MessageThreads.this, userInfo.get(1));
                         recyclerView.setAdapter(adapter);
                         LinearLayoutManager horizontalLayoutManager
                                 = new LinearLayoutManager(MessageThreads.this, LinearLayoutManager.VERTICAL, false);
@@ -165,4 +166,13 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
 
         Toast.makeText(this, "Clicked position: " + position, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void removeItem(View v, int position) {
+        Toast.makeText(this, "Clicked position: " + position, Toast.LENGTH_SHORT).show();
+        threads.remove(position);
+        adapter.notifyDataSetChanged();
+    }
+
+
 }

@@ -14,16 +14,18 @@ import java.util.ArrayList;
 
 public class ThreadsAdapter extends RecyclerView.Adapter{
 
-    ArrayList<Thread> threads;
-    Activity activity;
-    Thread thread;
+    private ArrayList<Thread> threads;
+    private Activity activity;
+    private Thread thread;
     private static RecyclerViewClickListener recyclerViewClickListener;
+    private String uid;
 
-    public ThreadsAdapter(ArrayList<Thread> threads, Activity activity, RecyclerViewClickListener recyclerViewClickListener)
+    public ThreadsAdapter(ArrayList<Thread> threads, Activity activity, RecyclerViewClickListener recyclerViewClickListener, String uid)
     {
         this.threads = threads;
         this.activity = activity;
         this.recyclerViewClickListener = recyclerViewClickListener;
+        this.uid = uid;
     }
 
     @Override
@@ -35,13 +37,15 @@ public class ThreadsAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(threads != null) {
-            ThreadHolder threadHolder = (ThreadHolder) holder;
+            final ThreadHolder threadHolder = (ThreadHolder) holder;
             thread = threads.get(position);
             threadHolder.threadName.setText(thread.getThreadName());
+            if(thread.getUid().equals(uid)) {
+                threadHolder.removeThread.setVisibility(View.VISIBLE);
+            }
         }
 
     }
-
 
 
     @Override
