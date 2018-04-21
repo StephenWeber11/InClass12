@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("Login");
 
         userNameField = findViewById(R.id.loginemail);
         passwordField = findViewById(R.id.loginpassword);
@@ -56,6 +57,13 @@ public class MainActivity extends AppCompatActivity {
                 String email = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
                 login(email, password);
+
+                Intent intent = new Intent(MainActivity.this, MessageThreads.class);
+                ArrayList<String> userInfo = new ArrayList<>();
+                userInfo.add(getUserFullName(email));
+                userInfo.add(getUserID(email));
+                intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
+                startActivity(intent);
             }
         });
 
@@ -77,16 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("AUTH", "signInWithEmail:success");
-
-                            Intent intent = new Intent(MainActivity.this, MessageThreads.class);
-                            ArrayList<String> userInfo = new ArrayList<>();
-                            userInfo.add(getUserFirstName(emailAddr));
-                            userInfo.add(getUserID(emailAddr));
-                            intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
-
-                            mDatabase.removeEventListener(listener);
-
-                            startActivity(intent);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -127,15 +125,15 @@ public class MainActivity extends AppCompatActivity {
         return mAuth;
     }
 
-    private String getUserFirstName(String email) {
-        String firstName = "";
+    private String getUserFullName(String email) {
+        String fullName = "";
         for(User user : users) {
             if(email.equals(user.getEmail())) {
-                firstName = user.getFirstName();
+                fullName = user.getFirstName() + " " + user.getLastName();
             }
         }
 
-        return firstName;
+        return fullName;
     }
 
     private String getUserID(String email) {

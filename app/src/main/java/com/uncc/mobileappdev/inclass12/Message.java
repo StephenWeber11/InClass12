@@ -1,5 +1,7 @@
 package com.uncc.mobileappdev.inclass12;
 
+import java.util.Date;
+
 /**
  * Created by Stephen on 4/16/2018.
  */
@@ -7,14 +9,16 @@ package com.uncc.mobileappdev.inclass12;
 public class Message {
     private String uid;
     private String messageContent;
-    private String date;
+    private Date date;
+    private String fullName;
 
     public Message(){}
 
-    public Message(String uid, String messageContent, String date) {
+    public Message(String uid, String messageContent, Date date, String fullName) {
         this.uid = uid;
         this.messageContent = messageContent;
         this.date = date;
+        this.fullName = fullName;
     }
 
     public String getUid() {
@@ -33,11 +37,19 @@ public class Message {
         this.messageContent = messageContent;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }

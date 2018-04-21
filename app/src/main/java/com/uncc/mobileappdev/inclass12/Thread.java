@@ -1,6 +1,7 @@
 package com.uncc.mobileappdev.inclass12;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Stephen on 4/16/2018.
@@ -8,17 +9,15 @@ import java.util.ArrayList;
 
 public class Thread {
     private String threadName;
-    private ArrayList<Message> messages;
+    private HashMap<String, Message> messages;
     private String uid;
-    private String threadID;
 
     public Thread() {}
 
-    public Thread(String threadName, ArrayList<Message> messages, String uid, String threadID) {
+    public Thread(String threadName, HashMap<String, Message> messages, String uid) {
         this.threadName = threadName;
         this.messages = messages;
         this.uid = uid;
-        this.threadID = threadID;
     }
 
     public String getThreadName() {
@@ -29,11 +28,11 @@ public class Thread {
         this.threadName = threadName;
     }
 
-    public ArrayList<Message> getMessages() {
+    public HashMap<String, Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
+    public void setMessages(HashMap<String, Message> messages) {
         this.messages = messages;
     }
 
@@ -43,13 +42,5 @@ public class Thread {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public String getThreadID() {
-        return threadID;
-    }
-
-    public void setThreadID(String threadID) {
-        this.threadID = threadID;
     }
 }

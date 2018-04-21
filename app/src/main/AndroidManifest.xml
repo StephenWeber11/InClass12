@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".MessageThreads" />
         <activity android:name=".SignUpActivity" />
+        <activity android:name=".MessageView"></activity>
     </application>
 
 </manifest>

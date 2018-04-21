@@ -1,21 +1,20 @@
 package com.uncc.mobileappdev.inclass12;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Stephen on 4/16/2018.
@@ -43,11 +43,15 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
     private ArrayList<User> users;
     private ArrayList<Thread> threads;
     private ArrayList<String> userInfo;
+    private ArrayList<String> keyList;
+
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_threads);
+        setTitle("Message Threads");
 
         mAuth = MainActivity.getmAuth();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -64,12 +68,17 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
 
         Intent intent = getIntent();
         userInfo = intent.getStringArrayListExtra(Constants.INTENT_KEY);
-        userName.setText(userInfo.get(0));
+
+        if(userInfo != null){
+            userName.setText(userInfo.get(0));
+            uid = userInfo.get(1).toString();
+        }
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MessageThreads.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -80,20 +89,12 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
 
                 Thread thread = new Thread();
                 thread.setThreadName(threadText);
-                thread.setUid(userInfo.get(1));
+                thread.setUid(uid);
+                thread.setMessages(new HashMap<String, Message>());
 
-                String uid = String.valueOf(createThreadID());
-                thread.setThreadID(uid);
-
-                ArrayList<Message> messages = new ArrayList<>();
-                messages.add(new Message(uid, "Some Message", "TodaysDate"));
-                messages.add(new Message(uid, "Some Message", "TodaysDate"));
-                messages.add(new Message(uid, "Some Message", "TodaysDate"));
-                thread.setMessages(messages);
-
-                threads.add(thread);
-                adapter.notifyDataSetChanged();
                 pushThreadData(thread);
+                inputTopic.setText("");
+                hideKeyboard(v);
             }
         });
 
@@ -127,22 +128,15 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
         mDatabase.child("threads").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                threads = new ArrayList<>();
+                buildThreadList();
+                buildKeyList();
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     Thread thread = postSnapshot.getValue(Thread.class);
                     threads.add(thread);
-
-                    if(adapter == null) {
-                        adapter = new ThreadsAdapter(threads, MessageThreads.this, MessageThreads.this, userInfo.get(1));
-                        recyclerView.setAdapter(adapter);
-                        LinearLayoutManager horizontalLayoutManager
-                                = new LinearLayoutManager(MessageThreads.this, LinearLayoutManager.VERTICAL, false);
-                        recyclerView.setLayoutManager(horizontalLayoutManager);
-                        recyclerView.setNestedScrollingEnabled(false);
-                        adapter.notifyDataSetChanged();
-                    }
+                    keyList.add(postSnapshot.getKey());
 
                 }
+                buildAdapterIfNecessary();
             }
 
             @Override
@@ -152,27 +146,59 @@ public class MessageThreads extends AppCompatActivity implements RecyclerViewCli
         });
     }
 
-    protected int createThreadID() {
-        Double randomID = Math.random() * 64;
-        return randomID.intValue();
+    private void buildKeyList() {
+        if(keyList == null) {
+            keyList = new ArrayList<>();
+        } else {
+            keyList.clear();
+        }
+    }
+
+    private void buildThreadList() {
+        if(threads == null) {
+            threads = new ArrayList<>();
+        } else {
+            threads.clear();
+        }
+    }
+
+    private void buildAdapterIfNecessary() {
+        if(adapter == null || (threads == null || threads.size() == 0)) {
+            adapter = new ThreadsAdapter(threads, MessageThreads.this, MessageThreads.this, uid);
+            recyclerView.setAdapter(adapter);
+            LinearLayoutManager horizontalLayoutManager
+                    = new LinearLayoutManager(MessageThreads.this, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(horizontalLayoutManager);
+            recyclerView.setNestedScrollingEnabled(false);
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override
     public void recyclerViewListClicked(View v, int position){
-        String threadID = threads.get(position).getThreadID();
-//        Intent intent = new Intent(this, MessageView.class);
-//        intent.putExtra(Constants.INTENT_KEY, threadID);
-//        startActivity(intent);
+        String threadKey = keyList.get(position);
+        String threadName = threads.get(position).getThreadName();
 
-        Toast.makeText(this, "Clicked position: " + position, Toast.LENGTH_SHORT).show();
+        ArrayList<String> threadInfo = new ArrayList<>();
+        threadInfo.add(threadKey);
+        threadInfo.add(uid);
+        threadInfo.add(threadName);
+
+        Intent intent = new Intent(this, MessageView.class);
+        intent.putStringArrayListExtra(Constants.INTENT_KEY, threadInfo);
+        startActivity(intent);
     }
 
     @Override
     public void removeItem(View v, int position) {
-        Toast.makeText(this, "Clicked position: " + position, Toast.LENGTH_SHORT).show();
-        threads.remove(position);
-        adapter.notifyDataSetChanged();
+        mDatabase.child("threads").child(keyList.get(position)).removeValue();
     }
-
 
 }

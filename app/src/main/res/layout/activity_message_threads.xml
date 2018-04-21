@@ -45,9 +45,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/inputTopic"
         android:layout_below="@+id/currentThreadsHeading"
-        android:layout_toStartOf="@+id/removethread"
         android:scrollbars="vertical" />
-
 
 
     <EditText
@@ -55,16 +53,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/threadRecycleListView"
-        android:layout_marginBottom="12dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
         android:layout_toStartOf="@+id/imageButtonAdd"
         android:ems="10"
         android:inputType="textPersonName" />
 
     <ImageButton
         android:id="@+id/imageButtonAdd"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignBottom="@+id/inputTopic"
         android:layout_alignEnd="@+id/logoutButton"
         app:srcCompat="@mipmap/ic_launcher_plus" />

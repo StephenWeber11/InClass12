@@ -7,18 +7,33 @@
     android:background="@drawable/rounded_corner_border"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_chat_message"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:text="Hi there!"
-        android:textSize="20sp" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
-    <ImageView
-        android:id="@+id/image_view_chat_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/text_view_chat_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="right"
+            android:text="Hi there!"
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/deleteMessageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:background="@color/cardview_shadow_end_color"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,6 +49,7 @@
             android:layout_weight=".5"
             android:gravity="left"
             android:text="User Name"
+            android:textColor="@android:color/black"
             android:textSize="15sp" />
 
         <TextView
@@ -43,6 +59,7 @@
             android:layout_weight=".45"
             android:gravity="center"
             android:text="12 Hours from now"
+            android:textColor="@android:color/black"
             android:textSize="15sp" />
 
 

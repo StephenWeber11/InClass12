@@ -73,6 +73,7 @@ public class SignUpActivity extends AppCompatActivity {
                     userInfo.add(firstName);
                     userInfo.add(uid);
                     intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 }
@@ -83,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -95,7 +97,6 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             Log.d("AUTH", "createUserWithEmail:SUCCESS");
-                            FirebaseUser user = mAuth.getCurrentUser();
 
                         } else {
                             Log.d("AUTH", "createUserWithEmail:FAILURE", task.getException());

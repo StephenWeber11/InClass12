@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MessageThreads">
+
+    <TextView
+        android:id="@+id/UsernameMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="14dp"
+        android:text="UserName"
+        android:textAlignment="textStart"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/logoutButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="13dp"
+        app:srcCompat="@mipmap/ic_launcher_lo" />
+
+    <TextView
+        android:id="@+id/currentThreadsHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/UsernameMessage"
+        android:layout_below="@+id/UsernameMessage"
+        android:text="Current Threads"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/threadRecycleListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/inputTopic"
+        android:layout_below="@+id/currentThreadsHeading"
+        android:layout_toStartOf="@+id/removethread"
+        android:scrollbars="vertical" />
+
+
+
+    <EditText
+        android:id="@+id/inputTopic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/threadRecycleListView"
+        android:layout_marginBottom="12dp"
+        android:layout_toStartOf="@+id/imageButtonAdd"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <ImageButton
+        android:id="@+id/imageButtonAdd"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@+id/inputTopic"
+        android:layout_alignEnd="@+id/logoutButton"
+        app:srcCompat="@mipmap/ic_launcher_plus" />
+
+</RelativeLayout>
