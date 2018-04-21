@@ -57,13 +57,6 @@ public class MainActivity extends AppCompatActivity {
                 String email = userNameField.getText().toString();
                 String password = passwordField.getText().toString();
                 login(email, password);
-
-                Intent intent = new Intent(MainActivity.this, MessageThreads.class);
-                ArrayList<String> userInfo = new ArrayList<>();
-                userInfo.add(getUserFullName(email));
-                userInfo.add(getUserID(email));
-                intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
-                startActivity(intent);
             }
         });
 
@@ -86,10 +79,17 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("AUTH", "signInWithEmail:success");
 
+                            Intent intent = new Intent(MainActivity.this, MessageThreads.class);
+                            ArrayList<String> userInfo = new ArrayList<>();
+                            userInfo.add(getUserFullName(emailAddr));
+                            userInfo.add(getUserID(emailAddr));
+                            intent.putStringArrayListExtra(Constants.INTENT_KEY, userInfo);
+                            startActivity(intent);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("AUTH", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(MainActivity.this, "Email or Password is Incorrect.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
