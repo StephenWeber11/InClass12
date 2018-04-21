@@ -65,7 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 if(doPasswordsMatch(password, passwordConfirmed)) {
                     signup(email, password);
-                    String uid = String.valueOf(generateUID());
+                    String uid = generateUID();
                     pushUserData(firstName, lastName, uid, email);
 
                     Intent intent = new Intent(SignUpActivity.this, MessageThreads.class);
@@ -117,9 +117,8 @@ public class SignUpActivity extends AppCompatActivity {
                 && (!Constants.EMPTY_STRING.equals(passOne) || !Constants.EMPTY_STRING.equals(passTwo));
     }
 
-    private int generateUID() {
-        Double randomID = Math.random() * 2048;
-        return randomID.intValue();
+    private String generateUID() {
+        return mAuth.getCurrentUser().getUid();
 
     }
 }
