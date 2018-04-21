@@ -118,7 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private int generateUID() {
-        Double randomID = Math.random() * 64;
+        Double randomID = Math.random() * 2048;
         return randomID.intValue();
 
     }
